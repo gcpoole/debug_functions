@@ -12,6 +12,8 @@ Usage:
 import json
 import os
 import time
+import socket
+import sys
 
 
 def fibonacci(n: int) -> int:
@@ -33,6 +35,11 @@ def main(event, context):
     Returns:
         dict: Response with statusCode, body, and headers
     """
+    # Instance identifier
+    instance_id = f"{socket.gethostname()}-{os.getpid()}"
+
+    print(f"[{instance_id}] Function invoked at {time.strftime('%H:%M:%S')}", flush=True)
+
     # Extract HTTP headers
     http_data = event.get('__ow_headers', {})
 
@@ -41,6 +48,7 @@ def main(event, context):
     provided_api_key = http_data.get('x-api-key')
 
     if not expected_api_key or provided_api_key != expected_api_key:
+        print(f"[{instance_id}] Authentication failed", flush=True)
         return {
             'statusCode': 403,
             'headers': {'Content-Type': 'application/json'},
@@ -49,6 +57,8 @@ def main(event, context):
                 'message': 'Authentication failed.'
             })
         }
+
+    print(f"[{instance_id}] Authentication successful", flush=True)
 
     # Capture caller information
     caller_info = {
@@ -102,9 +112,11 @@ def main(event, context):
         }
 
     # Calculate fibonacci with timing
+    print(f"[{instance_id}] Starting fibonacci({n}) calculation...", flush=True)
     start_time = time.time()
     result = fibonacci(n)
     duration = time.time() - start_time
+    print(f"[{instance_id}] Completed in {duration:.2f}s. Result: {result}", flush=True)
 
     # Return success response with caller information
     return {
@@ -116,6 +128,7 @@ def main(event, context):
             'duration_seconds': round(duration, 4),
             'function': 'fibonacci',
             'note': 'Calculated using recursive algorithm',
-            'caller_info': caller_info
+            'caller_info': caller_info,
+            'instance_id': instance_id  # Include instance ID in response
         })
     }
