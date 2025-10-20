@@ -45,8 +45,7 @@ def main(event, context):
             'statusCode': 403,
             'headers': {'Content-Type': 'application/json'},
             'body': json.dumps({
-                'error': 'Forbidden',
-                'message': 'Valid API key required in X-API-Key header'
+                'error': 'Authentication failed'
             })
         }
 
