@@ -1,5 +1,7 @@
 packages:
   - name: fibonacci
+    environment:
+      INTERNAL_API_KEY: ${INTERNAL_API_KEY}
     actions:
       - name: __main__
         runtime: python:default
