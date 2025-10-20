@@ -1,7 +1,6 @@
 packages:
   - name: fibonacci
     actions:
-      - name: fibonacci
+      - name: __main__
         runtime: python:default
-        main: __main__.py
         web: true
