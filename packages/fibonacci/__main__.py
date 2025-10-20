@@ -32,6 +32,22 @@ def main(event, context):
     Returns:
         dict: Response with statusCode, body, and headers
     """
+    # Extract HTTP information for debugging
+    http_data = event.get('__ow_headers', {})
+
+    # Capture caller information
+    caller_info = {
+        "source_ip": http_data.get('x-forwarded-for', 'unknown'),
+        "headers": {
+            "x-forwarded-for": http_data.get('x-forwarded-for'),
+            "x-real-ip": http_data.get('x-real-ip'),
+            "do-connecting-ip": http_data.get('do-connecting-ip'),
+            "user-agent": http_data.get('user-agent'),
+            "host": http_data.get('host'),
+        },
+        "all_headers": http_data
+    }
+
     # Query parameters are passed as top-level keys in the event
     n_str = event.get('n')
 
@@ -75,7 +91,7 @@ def main(event, context):
     result = fibonacci(n)
     duration = time.time() - start_time
 
-    # Return success response
+    # Return success response with caller information
     return {
         'statusCode': 200,
         'headers': {'Content-Type': 'application/json'},
@@ -84,6 +100,7 @@ def main(event, context):
             'result': result,
             'duration_seconds': round(duration, 4),
             'function': 'fibonacci',
-            'note': 'Calculated using recursive algorithm'
+            'note': 'Calculated using recursive algorithm',
+            'caller_info': caller_info
         })
     }
