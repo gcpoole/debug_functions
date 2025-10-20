@@ -10,6 +10,7 @@ Usage:
 """
 
 import json
+import os
 import time
 
 
@@ -34,6 +35,20 @@ def main(event, context):
     """
     # Extract HTTP information for debugging
     http_data = event.get('__ow_headers', {})
+
+    # API Key Authentication
+    expected_api_key = os.getenv('INTERNAL_API_KEY')
+    provided_api_key = http_data.get('x-api-key')
+
+    if not expected_api_key or provided_api_key != expected_api_key:
+        return {
+            'statusCode': 403,
+            'headers': {'Content-Type': 'application/json'},
+            'body': json.dumps({
+                'error': 'Forbidden',
+                'message': 'Valid API key required in X-API-Key header'
+            })
+        }
 
     # Capture caller information
     caller_info = {
