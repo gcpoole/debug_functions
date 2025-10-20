@@ -1,6 +1,0 @@
-packages:
-  - name: fibonacci
-    actions:
-      - name: __main__
-        runtime: python:default
-        web: true
