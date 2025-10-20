@@ -32,31 +32,8 @@ def main(event, context):
     Returns:
         dict: Response with statusCode, body, and headers
     """
-    # Debug: Return the full event to see what we're receiving
-    return {
-        'statusCode': 200,
-        'headers': {'Content-Type': 'application/json'},
-        'body': json.dumps({'debug_event': event, 'debug_context': str(context)}, indent=2)
-    }
-
-    # Extract query parameters
-    http_data = event.get('http', {})
-    query_string = http_data.get('queryString', '')
-
-    # Also try __ow_query (OpenWhisk format)
-    if not query_string and '__ow_query' in event:
-        query_string = event['__ow_query']
-
-    # Parse query parameters manually (simple key=value&key=value format)
-    params = {}
-    if query_string:
-        for param in query_string.split('&'):
-            if '=' in param:
-                key, value = param.split('=', 1)
-                params[key] = value
-
-    # Get 'n' parameter
-    n_str = params.get('n')
+    # Query parameters are passed as top-level keys in the event
+    n_str = event.get('n')
 
     if n_str is None:
         return {
