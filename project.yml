@@ -6,3 +6,6 @@ packages:
       - name: __main__
         runtime: python:default
         web: true
+        limits:
+          timeout: 60000  # 60 seconds
+          memory: 512     # 512 MB
