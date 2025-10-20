@@ -45,7 +45,8 @@ def main(event, context):
             'statusCode': 403,
             'headers': {'Content-Type': 'application/json'},
             'body': json.dumps({
-                'error': 'Authentication failed'
+                'error': 'Forbidden',
+                'message': 'Authentication failed.'
             })
         }
 
