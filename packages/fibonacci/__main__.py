@@ -33,6 +33,18 @@ def main(event, context):
     Returns:
         dict: Response with statusCode, body, and headers
     """
+    # DEBUG: Return full event to see structure
+    return {
+        'statusCode': 200,
+        'headers': {'Content-Type': 'application/json'},
+        'body': json.dumps({
+            'debug': 'Full event structure',
+            'event_keys': list(event.keys()),
+            'event': event,
+            'expected_key_present': bool(os.getenv('INTERNAL_API_KEY'))
+        })
+    }
+
     # Extract HTTP information for debugging
     http_data = event.get('__ow_headers', {})
 
